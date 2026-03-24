@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#04040d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="OtakuReader">
+<meta name="description" content="Free manga reader — search, read, download offline. No ads.">
+<title>OtakuReader</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <header class="hdr">
+    <div class="logo-wrap">
+      <div class="logo">OtakuReader</div>
+      <div class="logo-tag">FREE &middot; OFFLINE &middot; NO ADS</div>
+    </div>
+    <div class="hdr-actions">
+      <button class="icon-btn" id="btn-rand" title="Random manga" style="position:relative">&#127922;<span id="source-indicator" style="display:none;position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--acc);border:1.5px solid var(--bg)"></span></button>
+      <button class="icon-btn" id="btn-amoled" title="Toggle AMOLED">&#9680;</button>
+    </div>
+  </header>
+
+  <div class="install-bar" id="install-bar">
+    <span>&#128241; Install as app for full offline support</span>
+    <button id="install-btn">Install</button>
+    <button class="close-btn" id="install-close">&#10005;</button>
+  </div>
+
+  <div class="search-bar">
+    <div class="search-row">
+      <input id="search-input" type="search" placeholder="Search any manga, manhwa, manhua..." autocomplete="off" spellcheck="false" enterkeyhint="search">
+      <button id="search-clear-btn" style="display:none;width:36px;height:44px;background:none;border:none;color:var(--t3);font-size:18px;flex-shrink:0;padding:0" aria-label="Clear search">&#10005;</button><button id="search-btn">Search</button>
+    </div>
+    <div class="genre-row" id="genre-row">
+      <button class="genre-tag active" data-genre="all">All</button>
+      <button class="genre-tag" data-genre="manga">Manga</button>
+      <button class="genre-tag" data-genre="manhwa">Manhwa</button>
+      <button class="genre-tag" data-genre="manhua">Manhua</button>
+      <button class="genre-tag" data-genre="action">Action</button>
+      <button class="genre-tag" data-genre="romance">Romance</button>
+      <button class="genre-tag" data-genre="fantasy">Fantasy</button>
+      <button class="genre-tag" data-genre="isekai">Isekai</button>
+      <button class="genre-tag" data-genre="horror">Horror</button>
+      <button class="genre-tag" data-genre="sci-fi">Sci-Fi</button>
+      <button class="genre-tag" data-genre="comedy">Comedy</button>
+      <button class="genre-tag" data-genre="adventure">Adventure</button>
+      <button class="genre-tag" data-genre="cultivation">Cultivation</button>
+      <button class="genre-tag" data-genre="sports">Sports</button>
+      <button class="genre-tag" data-genre="drama">Drama</button>
+    </div>
+  </div>
+
+  <nav class="tab-bar">
+    <button class="tab active" data-tab="explore">&#128707; Explore</button>
+    <button class="tab" data-tab="library">&#128218; Library</button>
+    <button class="tab" data-tab="updates">&#128260; Updates</button>
+    <button class="tab" data-tab="downloads">&#11015; Downloads</button>
+    <button class="tab" data-tab="settings">&#9881; Settings</button>
+  </nav>
+
+  <main id="main-scroll">
+
+    <!-- EXPLORE -->
+    <section class="page active" id="page-explore">
+
+      <div id="explore-home">
+
+        <div id="recommend-section" style="display:none"><div class="section-header"><span class="section-title">&#129488; For You</span><span class="live-dot">AI</span></div><div class="card-row" id="recommend-row"><div class="skeleton-card"></div><div class="skeleton-card"></div></div></div>
+        <div id="continue-section" style="display:none">
+          <div class="section-header">
+            <span class="section-title">Continue Reading</span>
+            <button class="link-btn" id="clear-history">Clear</button>
+          </div>
+          <div class="list-container" id="continue-list"></div>
+        </div>
+
+        <div class="section-header">
+          <span class="section-title">Popular Now</span>
+          <span class="live-dot">LIVE</span>
+        </div>
+        <div class="card-row" id="popular-row"><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div></div>
+
+        <div class="section-header">
+          <span class="section-title">Latest Updates</span>
+          <span class="live-dot">LIVE</span>
+        </div>
+        <div class="list-container" id="latest-list"><div class="list-skeleton"></div><div class="list-skeleton"></div><div class="list-skeleton"></div><div class="list-skeleton"></div><div class="list-skeleton"></div><div class="list-skeleton"></div></div>
+
+
+        <div class="section-header">
+          <span class="section-title" id="trending-genre-label">Trending</span>
+          <span class="live-dot">LIVE</span>
+        </div>
+        <div class="card-row" id="trending-row">
+          <div class="skeleton-card"></div><div class="skeleton-card"></div>
+          <div class="skeleton-card"></div><div class="skeleton-card"></div>
+        </div>
+
+        <div class="section-header">
+          <span class="section-title">&#128293; Trending on ComicK</span>
+          <span class="live-dot" style="background:rgba(10,132,255,.08);color:var(--blu);border-color:rgba(10,132,255,.2)">ComicK</span>
+        </div>
+        <div class="card-row" id="comick-row">
+          <div class="skeleton-card"></div><div class="skeleton-card"></div>
+          <div class="skeleton-card"></div><div class="skeleton-card"></div>
+        </div>
+        <div class="section-header">
+          <span class="section-title">Top Rated</span>
+        </div>
+        <div class="card-row" id="toprated-row"><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div></div>
+      </div>
+
+      <div id="search-results" style="display:none">
+        <div class="section-header">
+          <span class="section-title" id="results-label">Results</span>
+          <span class="result-count" id="results-count"></span>
+        <select id="search-sort" style="height:26px;background:var(--bg3);border:1px solid var(--line);border-radius:var(--rsm);color:var(--t2);font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;padding:0 8px;outline:none;cursor:pointer"><option value="relevance">Relevant</option><option value="followedCount">Popular</option><option value="rating">Top Rated</option><option value="updatedAt">Latest</option><option value="title">A-Z</option></select>
+        </div>
+        <div class="list-container" id="results-list"></div>
+      <button id="search-load-more" style="display:none;width:calc(100% - 28px);margin:8px 14px;padding:11px;background:var(--bg3);border:1px solid var(--line);border-radius:var(--rsm);color:var(--t2);font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:.5px;cursor:pointer">Load more results</button>
+      </div>
+
+    </section>
+
+    <!-- LIBRARY -->
+    <section class="page" id="page-library">
+      <div class="lib-toolbar">
+        <input id="lib-search" type="search" placeholder="Search your library..." autocomplete="off">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px"><div class="chip-row" style="padding-top:0;flex:1">
+          <button class="chip active" data-filter="all">All</button>
+          <button class="chip" data-filter="manga">Manga</button>
+          <button class="chip" data-filter="manhwa">Manhwa</button>
+          <button class="chip" data-filter="manhua">Manhua</button>
+          <button class="chip" data-filter="reading">Reading</button>
+          <button class="chip" data-filter="unread">Unstarted</button></div><select id="lib-sort" style="height:26px;background:var(--bg3);border:1px solid var(--line);border-radius:var(--rsm);color:var(--t2);font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;padding:0 8px;outline:none;flex-shrink:0"><option value="added">Added</option><option value="az">A–Z</option><option value="read">Recently Read</option></select></div>
+      </div>
+      <div class="lib-grid" id="lib-grid"></div>
+      <div class="empty-state" id="lib-empty" style="display:none">
+        <div class="empty-icon">&#128218;</div>
+        <h3>Your library is empty</h3>
+        <p>Search for manga and tap the bookmark icon to save it here</p>
+      </div>
+    </section>
+
+    <!-- UPDATES -->
+    <section class="page" id="page-updates">
+      <div class="section-header" style="padding-top:14px">
+        <span class="section-title">Library Updates</span>
+        <button class="link-btn" id="refresh-updates">Refresh</button>
+      </div>
+      <div class="list-container" id="updates-list">
+        <div class="empty-state">
+          <div class="empty-icon">&#128260;</div>
+          <h3>Add manga to see updates</h3>
+          <p>Manga you add to your library will show up here</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOWNLOADS -->
+    <section class="page" id="page-downloads">
+      <div class="section-header" style="padding-top:14px">
+        <span class="section-title">Offline Library</span>
+        
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 14px 8px"><span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--t3);letter-spacing:1px" id="dl-stats"></span><select id="dl-sort" style="height:24px;background:var(--bg3);border:1px solid var(--line);border-radius:var(--rsm);color:var(--t2);font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;padding:0 6px;outline:none"><option value="manga">By Manga</option><option value="date">By Date</option></select></div>
+<div id="dl-queue-status" style="display:none;padding:8px 14px;background:rgba(10,132,255,.08);border-bottom:1px solid rgba(10,132,255,.2);font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--blu);display:flex;align-items:center;gap:10px"><span id="dl-queue-label">Queue: 0 pending</span><button onclick="DownloadQueue.pause();renderDownloadsPage()" style="padding:2px 8px;background:rgba(255,214,10,.15);border:1px solid rgba(255,214,10,.3);border-radius:4px;color:var(--gld);font-family:inherit;font-size:9px;cursor:pointer">PAUSE</button><button onclick="DownloadQueue.resume();renderDownloadsPage()" style="padding:2px 8px;background:rgba(48,209,88,.15);border:1px solid rgba(48,209,88,.3);border-radius:4px;color:var(--grn);font-family:inherit;font-size:9px;cursor:pointer">RESUME</button><button onclick="DownloadQueue.clear();renderDownloadsPage()" style="padding:2px 8px;background:rgba(232,53,79,.1);border:1px solid rgba(232,53,79,.2);border-radius:4px;color:var(--acc);font-family:inherit;font-size:9px;cursor:pointer">CLEAR</button></div>
+<div id="dl-list">
+        <div class="empty-state">
+          <div class="empty-icon">&#11015;</div>
+          <h3>No offline chapters</h3>
+          <p>Open any manga and tap &#11015; next to a chapter to save it for offline reading</p>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label">Backup &amp; Export</div>
+        <button class="action-btn blue" id="backup-btn">&#11015; Backup Library</button>
+        <button class="action-btn" id="export-csv-btn" style="margin-top:8px;background:rgba(10,132,255,.12);color:var(--blu);border:1px solid rgba(10,132,255,.25);box-shadow:none">&#128202; Export History CSV</button>
+        <button class="action-btn purple" id="restore-btn" style="margin-top:8px">&#128228; Restore Backup</button>
+        <input type="file" id="restore-file" accept=".json" style="display:none">
+        <button class="action-btn" id="export-app-btn" style="margin-top:8px">&#128230; Download App HTML</button>
+        <div id="export-progress" style="display:none;margin-top:8px;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden">
+          <div id="export-bar" style="height:100%;background:var(--gradient);width:0%;transition:width .2s;border-radius:2px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="page" id="page-settings">
+      <div class="settings-section">
+        <div class="settings-label">Reading</div>
+        <div class="settings-row">
+          <div class="settings-info"><div class="settings-name">Data Saver</div><div class="settings-desc">Load lower-res covers (.256.jpg) to save data</div></div>
+          <button class="toggle" id="toggle-datasaver"></button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-info"><div class="settings-name">Webtoon Mode Default</div><div class="settings-desc">Start all manga in webtoon (scroll) mode</div></div>
+          <button class="toggle" id="toggle-webtoon"></button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-info"><div class="settings-name">RTL Mode</div><div class="settings-desc">Right-to-left for Japanese manga</div></div>
+          <button class="toggle" id="toggle-rtl"></button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-info"><div class="settings-name">Show Page Numbers</div><div class="settings-desc">Display current page while reading</div></div>
+          <button class="toggle" id="toggle-showpg"></button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-info"><div class="settings-name">Tap to Navigate</div><div class="settings-desc">Tap edges to change pages</div></div>
+          <button class="toggle" id="toggle-tapnav"></button>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label">Display</div>
+        <div class="settings-row">
+          <div class="settings-info"><div class="settings-name">AMOLED Black</div><div class="settings-desc">Pure black background for OLED screens</div></div>
+          <button class="toggle" id="toggle-amoled"></button>
+        </div>
+        
+        <div class="settings-row">
+          <div class="settings-info"><div class="settings-name">Text Size</div><div class="settings-desc">Adjust reading comfort</div></div>
+          <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+            <span style="font-size:10px;color:var(--t3)">A</span>
+            <input type="range" id="font-size-slider" min="12" max="18" step="1" value="14" style="-webkit-appearance:none;width:80px;height:4px;border-radius:2px;background:var(--bg4);outline:none;cursor:pointer">
+            <span style="font-size:16px;color:var(--t3)">A</span>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-info"><div class="settings-name">Large Text</div><div class="settings-desc">Increase font size throughout the app</div></div>
+          <button class="toggle" id="toggle-bigtext"></button>
+        </div>
+      </div>
+      <div class="settings-section">
+        
+        <div class="settings-row" style="flex-wrap:wrap;gap:8px">
+          <div class="settings-info"><div class="settings-name">Accent Color</div><div class="settings-desc">App highlight color</div></div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;width:100%">
+            <button class="accent-swatch active" data-accent="#e8354f,#ff6d1f" style="background:linear-gradient(135deg,#e8354f,#ff6d1f)" title="Red (default)"></button>
+            <button class="accent-swatch" data-accent="#0a84ff,#40c0ff" style="background:linear-gradient(135deg,#0a84ff,#40c0ff)" title="Blue"></button>
+            <button class="accent-swatch" data-accent="#30d158,#00e676" style="background:linear-gradient(135deg,#30d158,#00e676)" title="Green"></button>
+            <button class="accent-swatch" data-accent="#bf5af2,#e080ff" style="background:linear-gradient(135deg,#bf5af2,#e080ff)" title="Purple"></button>
+            <button class="accent-swatch" data-accent="#ffd60a,#ff9f0a" style="background:linear-gradient(135deg,#ffd60a,#ff9f0a)" title="Gold"></button>
+            <button class="accent-swatch" data-accent="#ff375f,#ff6b9d" style="background:linear-gradient(135deg,#ff375f,#ff6b9d)" title="Pink"></button>
+          </div>
+        </div>
+
+        </div>
+        <div class="settings-section">
+        <div class="settings-label">Privacy</div>
+        <div class="settings-row">
+          <div class="settings-info"><div class="settings-name">Incognito Mode</div><div class="settings-desc">Don't save reading history</div></div>
+          <button class="toggle" id="toggle-incognito"></button>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label">Stats</div>
+        <div class="stats-grid" id="stats-grid"></div>
+        <div id="genre-chart"></div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label">Data</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px"><div style="flex:1;background:var(--bg3);border:1px solid var(--line);border-radius:var(--rsm);padding:10px;text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--acc)" id="history-count">0</div><div style="font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--t3);letter-spacing:1px">HISTORY</div></div><div style="flex:1;background:var(--bg3);border:1px solid var(--line);border-radius:var(--rsm);padding:10px;text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--blu)" id="storage-used">0</div><div style="font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--t3);letter-spacing:1px">STORAGE</div></div></div>
+        <div class="settings-row" style="flex-direction:column;align-items:flex-start;gap:6px">
+          <div class="settings-name">System Health</div>
+          <div id="health-panel" style="width:100%;background:var(--bg4);border-radius:var(--rsm);padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--t3);line-height:1.8">
+            No data yet — start reading to track health
+          </div>
+          <button onclick="updateHealthPanel()" style="padding:4px 10px;background:var(--bg4);border:1px solid var(--line);border-radius:5px;color:var(--t2);font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;cursor:pointer">Refresh</button>
+        </div>
+
+        <button class="action-btn red" id="clear-data-btn">&#128465; Clear All Data</button>
+      </div>
+      <div class="app-version">OtakuReader v22 &middot; Free &middot; No Ads &middot; Open Source</div>
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-nav="explore"><span class="nav-icon">&#128707;</span><span>Explore</span></button>
+    <button class="nav-item" data-nav="library"><span class="nav-icon">&#128218;</span><span>Library</span></button>
+    <button class="nav-item" data-nav="updates" style="position:relative"><span class="nav-icon">&#128260;</span><span>Updates</span><span id="updates-badge" style="display:none;position:absolute;top:5px;right:calc(50% - 14px);width:8px;height:8px;border-radius:50%;background:var(--acc);border:1.5px solid var(--bg)"></span></button>
+    <button class="nav-item" data-nav="downloads"><span class="nav-icon">&#11015;</span><span>Downloads</span></button>
+    <button class="nav-item" data-nav="settings"><span class="nav-icon">&#9881;</span><span>Settings</span></button>
+  </nav>
+
+  <button class="scroll-top-btn" id="scroll-top">&#8679;</button>
+</div>
+
+<!-- MANGA DETAIL -->
+<div class="overlay" id="detail-overlay">
+  <div class="detail-backdrop" id="detail-backdrop"></div>
+  <div class="detail-panel">
+    <div class="detail-header">
+      <button class="back-btn" id="detail-back">&#8592; Back</button>
+      <div class="detail-actions">
+        <button class="icon-btn" id="detail-copy-title" title="Copy title">&#128203;</button><button class="icon-btn" id="detail-share">&#128279;</button>
+        <button class="icon-btn" id="detail-open">&#8599;</button>
+      </div>
+    </div>
+    <div class="detail-hero">
+      <div class="detail-blur" id="detail-blur"></div>
+      <div class="detail-cover-wrap">
+        <img class="detail-cover" id="detail-cover" src="" alt="">
+        <div class="detail-cover-fallback" id="detail-cover-fallback"></div>
+      </div>
+      <div class="detail-meta">
+        <div class="detail-type" id="detail-type"></div>
+        <h1 class="detail-title" id="detail-title"></h1>
+        <div class="detail-author" id="detail-author"></div>
+        <div class="detail-stats">
+          <div class="detail-stat"><span id="detail-year">—</span><label>Year</label></div>
+          <div class="detail-stat"><span id="detail-status">—</span><label>Status</label></div>
+          <div class="detail-stat"><span id="detail-rating-live" style="color:var(--gld)">—</span><label>Rating</label></div>
+          <div class="detail-stat"><span id="detail-follows" style="color:var(--blu)">—</span><label>Follows</label></div>
+          <div class="detail-stat"><span id="detail-chapters">—</span><label>Chapters</label></div>
+        </div>
+      </div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-genres" id="detail-genres"></div>
+      <p class="detail-desc collapsed" id="detail-desc"></p>
+      <button class="read-more-btn" id="detail-read-more">Read more</button>
+      
+      <div style="margin-top:12px">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--t3);letter-spacing:2px;margin-bottom:6px">MY NOTES</div>
+        <textarea id="manga-note" rows="2" placeholder="Add a personal note..." style="width:100%;background:var(--bg3);border:1px solid var(--line);border-radius:var(--rsm);padding:8px 10px;color:var(--t1);font-family:'IBM Plex Sans',sans-serif;font-size:12px;resize:none;outline:none;-webkit-user-select:text;user-select:text;line-height:1.6;transition:border-color .2s"></textarea>
+      </div>
+
+      <div class="detail-rating">
+        <div id="stars-row">
+          <span class="star" data-r="1">&#9733;</span>
+          <span class="star" data-r="2">&#9733;</span>
+          <span class="star" data-r="3">&#9733;</span>
+          <span class="star" data-r="4">&#9733;</span>
+          <span class="star" data-r="5">&#9733;</span>
+        </div>
+        <span class="rating-label" id="rating-label">Rate this</span>
+      </div>
+      <div class="detail-btn-row">
+        <button class="primary-btn" id="detail-read-btn">&#9654; Read</button>
+        <button class="secondary-btn" id="detail-bookmark-btn">&#128278; Save</button>
+        <button class="secondary-btn" id="detail-dl-all-btn">&#11015; Download All</button>
+      </div>
+      <div style="padding:0 0 8px"><input id="chapter-search" type="search" placeholder="Search chapters..." autocomplete="off" style="width:100%;height:34px;background:var(--bg3);border:1px solid var(--line);border-radius:var(--rsm);padding:0 10px;color:var(--t1);font-family:'IBM Plex Sans',sans-serif;font-size:12px;outline:none;-webkit-user-select:text;user-select:text" oninput="renderChapList()"></div>
+    <div class="chapters-filter"><button class="chip active" data-cf="all">All</button><button class="chip" data-cf="unread">Unread</button><button class="chip" data-cf="downloaded">Downloaded</button></div><div class="chapters-header">
+        <span id="chapters-count"></span>
+        <div style="display:flex;gap:8px"><button class="link-btn" id="mark-all-read">Mark all read</button><button class="link-btn" id="chapter-jump-btn">Jump to #</button>
+        <button class="link-btn" id="sort-btn">Newest first</button></div>
+      </div>
+      <div id="chapters-list"></div>
+      <button class="load-more-btn" id="load-more-btn" style="display:none">Load more chapters</button>
+    </div>
+  </div>
+</div>
+
+<!-- READER -->
+<div class="reader-overlay" id="reader-overlay">
+  <div class="reader-header" id="reader-header">
+    <button class="back-btn light" id="reader-back">&#8592;</button>
+    <div class="reader-info">
+      <div class="reader-title" id="reader-title"></div>
+      <div class="reader-subtitle" id="reader-subtitle"></div>
+    </div>
+    <button id="reader-lock-btn" style="padding:5px 8px;border-radius:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.5);font-family:'Share Tech Mono',monospace;font-size:9px;cursor:pointer;flex-shrink:0" title="Lock screen">&#128274;</button>
+    <button class="mode-btn" id="reader-mode-btn">Webtoon</button>
+    <button class="icon-btn light" id="reader-settings-btn">&#9881;</button>
+    <div class="offline-badge" id="offline-badge">OFFLINE</div>
+  </div>
+  <div class="reader-scroll" id="reader-scroll">
+    <div class="reader-pages" id="reader-pages"></div>
+    <div class="chapter-nav" id="chapter-nav">
+      <button class="nav-btn" id="prev-chapter">&#8592; Previous</button>
+      <button class="nav-btn primary" id="next-chapter">Next &#8594;</button>
+    </div>
+  </div>
+  <div class="brightness-overlay" id="brightness-overlay"></div>
+  <div class="reader-footer" id="reader-footer">
+    <span class="page-count" id="page-count"></span>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+  <div class="reader-settings-panel" id="reader-settings-panel">
+    <div class="reader-settings-inner">
+      <div class="rs-row">
+        <span class="rs-label">Brightness</span>
+        <input type="range" id="brightness-slider" min="0" max="70" value="0">
+        <span class="rs-val" id="brightness-val">0%</span>
+      </div>
+      <div class="rs-row" style="margin-bottom:8px"><span class="rs-label">Eye filter</span><div style="display:flex;gap:6px"><button class="filter-btn active" data-filter="none" style="padding:4px 10px;border-radius:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);font-family:'Share Tech Mono',monospace;font-size:9px;cursor:pointer;transition:all .18s">NONE</button><button class="filter-btn" data-filter="warm" style="padding:4px 10px;border-radius:5px;background:rgba(255,180,100,.15);border:1px solid rgba(255,180,100,.3);color:rgba(255,180,100,.9);font-family:'Share Tech Mono',monospace;font-size:9px;cursor:pointer;transition:all .18s">WARM</button><button class="filter-btn" data-filter="cool" style="padding:4px 10px;border-radius:5px;background:rgba(100,160,255,.15);border:1px solid rgba(100,160,255,.3);color:rgba(100,160,255,.9);font-family:'Share Tech Mono',monospace;font-size:9px;cursor:pointer;transition:all .18s">COOL</button></div></div>
+    <div class="rs-modes">
+        <button class="rs-mode active" data-mode="webtoon">Webtoon</button>
+        <button class="rs-mode" data-mode="paged">Paged LTR</button>
+        <button class="rs-mode" data-mode="rtl">Paged RTL</button>
+      </div>
+      <div class="rs-row" style="margin-top:4px"><span class="rs-label">Auto-scroll</span><button id="autoscroll-btn" style="padding:5px 12px;border-radius:6px;background:var(--bg4);border:1px solid var(--line);color:var(--t2);font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all .18s">OFF</button><span class="rs-val" id="autoscroll-speed-val">3s</span></div>
+    <input type="range" id="autoscroll-speed" min="1" max="10" value="3" style="-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,.15);outline:none;cursor:pointer;margin-bottom:14px">
+    <button class="link-btn" id="close-reader-settings" style="margin-top:10px">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- DOWNLOAD OVERLAY -->
+<div class="dl-overlay" id="dl-overlay">
+  <div class="dl-overlay-inner">
+    <div class="dl-icon">&#11015;</div>
+    <div class="dl-title" id="dl-title">Downloading...</div>
+    <div class="dl-manga" id="dl-manga"></div>
+    <div class="dl-progress-wrap">
+      <div class="dl-progress-bar"><div class="dl-progress-fill" id="dl-progress-fill"></div></div>
+      <div class="dl-pct" id="dl-pct">0%</div>
+    </div>
+    <div class="dl-page" id="dl-page">Starting...</div>
+    <div style="display:flex;gap:8px;justify-content:center">
+      <button id="dl-pause-btn" style="padding:10px 20px;background:rgba(255,214,10,.12);border:1px solid rgba(255,214,10,.3);border-radius:var(--rsm);color:var(--gld);font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer">&#9208; Pause</button>
+      <button id="dl-cancel-btn" style="padding:10px 20px;background:var(--bg3);border:1px solid var(--line);border-radius:var(--rsm);color:var(--t2);font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer">&#10005; Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+
+<!-- CUSTOM CONFIRM MODAL -->
+<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(4,4,13,.85);z-index:800;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(10px)">
+  <div style="background:var(--bg3);border:1px solid var(--line);border-radius:var(--r);padding:22px;max-width:320px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.8)">
+    <div id="modal-title" style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;letter-spacing:.5px;margin-bottom:8px"></div>
+    <div id="modal-msg" style="font-size:12px;color:var(--t2);line-height:1.8;margin-bottom:18px;font-family:'IBM Plex Sans',sans-serif"></div>
+    <div style="display:flex;gap:8px">
+      <button id="modal-cancel" style="flex:1;padding:10px;background:var(--bg4);border:1px solid var(--line);border-radius:var(--rsm);color:var(--t2);font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer">Cancel</button>
+      <button id="modal-ok" style="flex:1;padding:10px;background:var(--gradient);border:none;border-radius:var(--rsm);color:#fff;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:var(--glow)">Confirm</button>
+    </div>
+  </div>
+</div>
+
+
+<div id="shortcuts-overlay" style="display:none;position:fixed;inset:0;background:rgba(4,4,13,.9);z-index:700;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(12px)">
+  <div style="background:var(--bg3);border:1px solid var(--line);border-radius:var(--r);padding:20px;max-width:340px;width:100%;max-height:80vh;overflow-y:auto">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:14px">Keyboard Shortcuts</div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--t2);line-height:2.4">
+      <b style="color:var(--acc)">Anywhere</b><br>
+      <span style="color:var(--t3)">/</span> &nbsp;&nbsp;&nbsp;&nbsp; Open search<br>
+      <span style="color:var(--t3)">?</span> &nbsp;&nbsp;&nbsp;&nbsp; This help<br>
+      <span style="color:var(--t3)">Esc</span> &nbsp;&nbsp; Close overlay<br><br>
+      <b style="color:var(--acc)">In Reader</b><br>
+      <span style="color:var(--t3)">← →</span> &nbsp; Previous / Next page<br>
+      <span style="color:var(--t3)">↑ ↓</span> &nbsp; Previous / Next chapter<br>
+      <span style="color:var(--t3)">Space</span>&nbsp; Toggle UI<br>
+      <span style="color:var(--t3)">F</span> &nbsp;&nbsp;&nbsp;&nbsp; Toggle fullscreen<br>
+      <span style="color:var(--t3)">Esc</span> &nbsp;&nbsp; Close reader<br><br>
+      <b style="color:var(--acc)">On Cards</b><br>
+      Long-press &nbsp; Quick save to library<br>
+      Swipe left &nbsp; Download chapter
+    </div>
+    <button onclick="document.getElementById('shortcuts-overlay').style.display='none'" style="width:100%;margin-top:14px;padding:9px;background:var(--bg4);border:1px solid var(--line);border-radius:var(--rsm);color:var(--t2);font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer">Close</button>
+  </div>
+</div>
+
+
+<!-- DEBUG PANEL (toggle with Ctrl+Shift+D) -->
+<div id="debug-panel" style="display:none;position:fixed;bottom:0;left:0;right:0;max-height:40vh;background:rgba(0,0,0,.95);border-top:2px solid var(--acc);z-index:9999;font-family:'Share Tech Mono',monospace;font-size:10px;overflow-y:auto">
+  <div style="display:flex;align-items:center;padding:6px 10px;border-bottom:1px solid #222;gap:10px;flex-wrap:wrap">
+    <span style="color:var(--acc);font-weight:700;letter-spacing:1px">DEBUG</span>
+    <span id="dbg-source" style="color:#0f0">■ MangaDex API</span>
+    <span id="dbg-net" style="color:#888">NET: —</span>
+    <span id="dbg-cache" style="color:#888">CACHE: 0</span>
+    <span id="dbg-idb" style="color:#888">IDB: —</span>
+    <span id="dbg-health" style="color:#888">HEALTH: 100%</span>
+    <button onclick="document.getElementById('debug-log').innerHTML=''" style="margin-left:auto;padding:2px 8px;background:#222;border:1px solid #444;color:#888;cursor:pointer;font-family:inherit;font-size:9px">CLEAR</button>
+    <button onclick="document.getElementById('debug-panel').style.display='none'" style="padding:2px 8px;background:#222;border:1px solid #444;color:#888;cursor:pointer;font-family:inherit;font-size:9px">CLOSE</button>
+  </div>
+  <div id="debug-log" style="padding:6px 10px;color:#666;line-height:1.8;max-height:30vh;overflow-y:auto"></div>
+</div>
+
+
+
+<!-- OtakuReader scripts — load in order -->
+<script src="./config.js"></script>
+<script src="./utils/storage.js"></script>
+<script src="./utils/api.js"></script>
+<script src="./utils/ui.js"></script>
+<script src="./sources/mangadex.js"></script>
+<script src="./script.js"></script>
+</body>
+</html>
